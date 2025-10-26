@@ -17,7 +17,7 @@ jobs:
       # Étape 2 : Cloner un dépôt Python externe (optionnel)
       - name: Cloner un autre dépôt Python
         run: |
-          git clone https://github.com/rkoussetou-beep/projet-clone-python.git external-python-repo
+          git clone https://github.com/ricardo-kali2025/projet-clone-python.git external-python-repo
           cd external-python-repo
           ls -la
 
@@ -52,7 +52,7 @@ jobs:
             if [ -d "external-python-repo" ]; then
               cd external-python-repo && git pull
             else
-              git clone https://github.com/rkoussetou-beep/projet-clone-python.git external-python-repo
+              git clone https://github.com/ricardo-kali2025/projet-clone-python.git external-python-repo
             fi
             cd external-python-repo
             pip install -r requirements.txt
