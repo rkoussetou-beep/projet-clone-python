@@ -1,0 +1,35 @@
+name: Build & Test Python Repo
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du dépôt principal
+        uses: actions/checkout@v4
+
+      - name: Cloner le dépôt Python externe
+        run: |
+          git clone https://github.com/<UTILISATEUR>/<NOM_DU_DEPOT>.git external-python-repo
+          cd external-python-repo
+          ls -la
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer les dépendances
+        run: |
+          cd external-python-repo
+          pip install -r requirements.txt
+
+      - name: Lancer les tests
+        run: |
+          cd external-python-repo
+          pytest -v
