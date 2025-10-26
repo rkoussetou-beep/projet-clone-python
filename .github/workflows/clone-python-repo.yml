@@ -1,0 +1,20 @@
+name: Clone Python Repo
+
+on:
+  workflow_dispatch:  # Permet de le lancer manuellement
+  push:               # Ou automatiquement à chaque push
+    branches: [ main ]
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest  # Utilise un runner GitHub hébergé
+
+    steps:
+      - name: Checkout du dépôt courant
+        uses: actions/checkout@v4
+
+      - name: Cloner un autre dépôt Python
+        run: |
+          echo "Clonage du dépôt Python externe..."
+          git clone https://github.com/rkoussetou-beep/demo-ci-python.git
+          ls -la
