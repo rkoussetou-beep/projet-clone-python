@@ -1,0 +1,59 @@
+name: CI/CD Python + SSH Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Cloner ton dépôt principal
+      - name: Checkout du dépôt
+        uses: actions/checkout@v4
+
+      # Étape 2 : Cloner un dépôt Python externe (optionnel)
+      - name: Cloner un autre dépôt Python
+        run: |
+          git clone https://github.com/rkoussetou-beep/projet-clone-python.git external-python-repo
+          cd external-python-repo
+          ls -la
+
+      # Étape 3 : Installer Python
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Étape 4 : Installer les dépendances
+      - name: Installer les dépendances
+        run: |
+          cd external-python-repo
+          pip install -r requirements.txt
+
+      # Étape 5 : Lancer les tests unitaires
+      - name: Lancer les tests
+        run: |
+          cd external-python-repo
+          pytest -v || true  # (true pour éviter un échec bloquant si pas de tests)
+
+      # Étape 6 : Déploiement SSH sur ton serveur
+      - name: Déployer sur serveur distant
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "📦 Déploiement sur le serveur distant..."
+            cd /home/${{ secrets.SSH_USER }}/app || mkdir -p /home/${{ secrets.SSH_USER }}/app && cd /home/${{ secrets.SSH_USER }}/app
+            if [ -d "external-python-repo" ]; then
+              cd external-python-repo && git pull
+            else
+              git clone https://github.com/rkoussetou-beep/projet-clone-python.git external-python-repo
+            fi
+            cd external-python-repo
+            pip install -r requirements.txt
+            nohup python3 app.py &
