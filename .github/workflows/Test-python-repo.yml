@@ -15,7 +15,7 @@ jobs:
 
       - name: Cloner le dépôt Python externe
         run: |
-          git clone https://github.com/<UTILISATEUR>/<NOM_DU_DEPOT>.git external-python-repo
+          git clone https://github.com/ricardo-kali2025/demo-python.git external-python-repo
           cd external-python-repo
           ls -la
 
